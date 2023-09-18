@@ -39,6 +39,8 @@ print(f"Muestras en el conjunto de prueba: {test_samples} ({(test_samples/total_
 # imprimi las cadenas de texto con problemas 
 
 # Identificar las cadenas problemáticas en el conjunto de entrenamiento
+
+# Identificar las cadenas problemáticas en el conjunto de entrenamiento
 problematic_texts = []
 for text in train_data.iloc[:, 0]:
     try:
@@ -46,18 +48,21 @@ for text in train_data.iloc[:, 0]:
     except (TypeError, LookupError):
         problematic_texts.append(text)
 
-# Imprimir las cadenas problemáticas para identificar y modificarlas 
+# Imprimir las cadenas problemáticas
 print("Cadenas de texto problemáticas:")
 for text in problematic_texts:
     print(text)
 
-# Realizar limpieza de texto por saltos de linea por espacio y eliminar espacios al final 
+# Realizar limpieza de texto (ajustar según las necesidades específicas)
 def clean_text(text):
-    text = text.replace('\n', ' ')  # Reemplazar saltos de línea por espacios
-    text = text.strip()  # Eliminar espacios en blanco al principio y al final
+    if isinstance(text, str):  # Verificar si es una cadena de texto
+        text = text.replace('\n', ' ')  # Reemplazar saltos de línea por espacios
+        text = text.strip()  # Eliminar espacios en blanco al principio y al final
+        # Puedes agregar más pasos de limpieza aquí
+
     return text
 
-# Aplicar limpieza a las cadenas problemáticas pero hace falta agregar mas casos 
+# Aplicar limpieza a las cadenas problemáticas
 cleaned_problematic_texts = [clean_text(text) for text in problematic_texts]
 
 # Modelado en n-gramas de las cadenas de texto (ejemplo con bigramas)
@@ -66,7 +71,7 @@ train_ngrams = [' '.join(nltk.ngrams(nltk.word_tokenize(text), n)) for text in t
 valid_ngrams = [' '.join(nltk.ngrams(nltk.word_tokenize(text), n)) for text in valid_data.iloc[:, 0]]
 test_ngrams = [' '.join(nltk.ngrams(nltk.word_tokenize(text), n)) for text in test_data.iloc[:, 0]]
 
-# Codificación one-hot para las variables
+# Codificación one-hot para las variables 
 train_encoded = pd.get_dummies(train_data['clase'])
 valid_encoded = pd.get_dummies(valid_data['clase'])
 test_encoded = pd.get_dummies(test_data['clase'])
@@ -79,4 +84,3 @@ print(f"Número de tweets en el conjunto de prueba: {len(test_ngrams)}")
 # Imprimir la codificación de los encabezados para el conjunto de entrenamiento
 print("Codificación de los encabezados para el conjunto de entrenamiento:")
 print(train_encoded.columns)
-
